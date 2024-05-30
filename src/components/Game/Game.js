@@ -5,6 +5,7 @@ import { WORDS } from "../../data";
 import GuessInput from "../GuessInput/GuessInput";
 import Banner from "../Banner/Banner";
 import Guess from "../Guess/Guess";
+import Keyboard from "../Keyboard/Keyboard";
 import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 import { checkGuess } from "../../game-helpers";
 
@@ -17,9 +18,11 @@ function Game() {
   const [answers, setAnswers] = React.useState([]);
   const [bannerVisible, setBannerVisible] = React.useState(false);
   const [bannerType, setBannerType] = React.useState("sad");
+  const [checkedGuess, setCheckedGuess] = React.useState();
 
   function handleAddGuess(guess) {
     const checkedGuess = checkGuess(guess, answer);
+    setCheckedGuess(checkedGuess);
     const nextAnswerList = [...answers, checkedGuess];
 
     setAnswers(nextAnswerList);
@@ -46,6 +49,7 @@ function Game() {
         <Banner type={bannerType} answer={answer} numGuesses={answers.length} />
       )}
       {generateGuessRows()}
+      <Keyboard checkedGuess={checkedGuess} />
       <GuessInput handleAddGuess={handleAddGuess} disabled={bannerVisible} />
     </>
   );
