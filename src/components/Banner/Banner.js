@@ -1,6 +1,6 @@
 import React from "react";
 
-function Banner({ type, answer, numGuesses }) {
+function Banner({ type, answer, numGuesses, handleFinishGame }) {
   const happyBanner = (
     <p>
       <strong>Congratulations!</strong> Got it in
@@ -20,6 +20,11 @@ function Banner({ type, answer, numGuesses }) {
   return (
     <div className={`banner ${type}`}>
       {type === "happy" ? happyBanner : sadBanner}
+      <div>
+        <button className="myButton" onClick={handleFinishGame}>
+          Restart
+        </button>
+      </div>
     </div>
   );
 }

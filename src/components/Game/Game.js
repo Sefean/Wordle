@@ -10,29 +10,41 @@ import { NUM_OF_GUESSES_ALLOWED } from "../../constants";
 import { checkGuess } from "../../game-helpers";
 
 // Pick a random word on every pageload.
-const answer = sample(WORDS);
+//const answer = sample(WORDS);
 // To make debugging easier, we'll log the solution in the console.
-console.info({ answer });
 
 function Game() {
   const [answers, setAnswers] = React.useState([]);
   const [bannerVisible, setBannerVisible] = React.useState(false);
   const [bannerType, setBannerType] = React.useState("sad");
   const [checkedGuess, setCheckedGuess] = React.useState();
+  const [trueAnswer, setTrueAnswer] = React.useState(sample(WORDS));
+  const [gameStatus, setGameStatus] = React.useState("new");
+
+  console.info({ answer: trueAnswer });
 
   function handleAddGuess(guess) {
-    const checkedGuess = checkGuess(guess, answer);
+    const checkedGuess = checkGuess(guess, trueAnswer);
     setCheckedGuess(checkedGuess);
     const nextAnswerList = [...answers, checkedGuess];
 
     setAnswers(nextAnswerList);
 
-    if (guess == answer) {
+    if (guess == trueAnswer) {
       setBannerType("happy");
       setBannerVisible(true);
     } else if (nextAnswerList.length >= NUM_OF_GUESSES_ALLOWED) {
       setBannerVisible(true);
     }
+  }
+
+  function handleFinishGame() {
+    setAnswers([]);
+    setGameStatus("new");
+    setBannerVisible(false);
+    const newAnswer = sample(WORDS);
+    setTrueAnswer(newAnswer);
+    console.log(newAnswer);
   }
 
   function generateGuessRows() {
@@ -46,11 +58,20 @@ function Game() {
   return (
     <>
       {bannerVisible && (
-        <Banner type={bannerType} answer={answer} numGuesses={answers.length} />
+        <Banner
+          type={bannerType}
+          answer={trueAnswer}
+          numGuesses={answers.length}
+          handleFinishGame={handleFinishGame}
+        />
       )}
       {generateGuessRows()}
-      <Keyboard checkedGuess={checkedGuess} />
-      <GuessInput handleAddGuess={handleAddGuess} disabled={bannerVisible} />
+      <Keyboard checkedGuess={checkedGuess} gameStatus={gameStatus} />
+      <GuessInput
+        handleAddGuess={handleAddGuess}
+        disabled={bannerVisible}
+        setGameStatus={setGameStatus}
+      />
     </>
   );
 }

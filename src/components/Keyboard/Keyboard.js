@@ -1,8 +1,11 @@
 import React from "react";
 import Key from "../Key/Key";
 
-function Keyboard({ checkedGuess }) {
+function Keyboard({ checkedGuess, gameStatus }) {
   function getStatus(letter) {
+    if (gameStatus == "new") {
+      return "new";
+    }
     if (checkedGuess) {
       const found = checkedGuess.find((item) => item.letter === letter);
       return found ? found.status : "";

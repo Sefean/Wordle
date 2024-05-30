@@ -1,12 +1,13 @@
 import React from "react";
 
-function GuessInput({ handleAddGuess, disabled }) {
+function GuessInput({ handleAddGuess, disabled, setGameStatus }) {
   const [guess, setGuess] = React.useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
     handleAddGuess(guess);
     setGuess("");
+    setGameStatus("running");
   }
 
   return (
